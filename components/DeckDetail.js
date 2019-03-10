@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { View } from 'react-native'
 import { StyleSheet } from "react-native"
 import { connect } from 'react-redux'
-import { Container, Content, Footer, FooterTab, Button, Text } from "native-base"
+import { Container, Button, Text } from "native-base"
 import { handleGetDeckDetail } from "../actions/deckDetail"
 import { buildDeckSubtitle, isObjectEmpty } from '../helpers/common'
 import HistoryQuiz from './HistoryQuiz'
@@ -12,54 +12,85 @@ class DeckDetail extends Component {
         title: "Deck's detail",
     }
 
+    state = {
+        sortQuizHistory: 'date'
+    }
+
     componentDidMount() {
         const { id } = this.props.navigation.state.params
-        this.props.getDeckDetail(id)
+        id !== 0 && this.props.getDeckDetail(id)
     }
 
     onAddNewCard = () => {
-        const { id } = this.props.navigation.state.params
+        const { id } = this.props.deckDetail
         this.props.navigation.navigate('AddCard', { id })
     }
 
     onStartQuiz = () => {
-        const { id } = this.props.navigation.state.params
+        const { id } = this.props.deckDetail
         this.props.navigation.navigate('Quiz', { id })
+    }
+
+    changeHistoryQuizSort = () => {
+        this.setState(prev => ({
+            sortQuizHistory: prev.sortQuizHistory === 'date' ? 'score' : 'date'
+        }))
+    }
+
+    textInfoHistoryQuizSort = () => {
+        if (this.state.sortQuizHistory === 'date') {
+            return 'Tap any card to sort by score'
+        }
+
+        return 'Tap any card to sort by date'
     }
 
     render() {
         const { deckDetail } = this.props
-        const { questions, historyQuiz } = deckDetail
 
         if (isObjectEmpty(deckDetail)) {
             return <Text>Loading...</Text>
         }
+
+        const { historyQuiz, title, questions } = deckDetail
+
+        const historyQuizSort = historyQuiz.sort((a, b) => {
+            if (this.state.sortQuizHistory === 'date') {
+                return b.date - a.date
+            }
+
+            return parseInt(b.score) - parseInt(a.score)
+        })
 
         return (
             <Fragment>
                 <Container style={styles.container}>
                     <View style={styles.content}>
                         <Text style={styles.title}>
-                            {deckDetail.title}
+                            {title}
                         </Text>
                         <Text style={styles.subtitle}>
                             {buildDeckSubtitle(deckDetail)}
                         </Text>
-                        {historyQuiz.length > 0 && (
+                        {historyQuizSort.length > 0 && (
                             <View style={styles.containerHistory}>
-                                <HistoryQuiz data={historyQuiz} />
+                                <HistoryQuiz data={historyQuizSort} changeHistoryQuizSort={this.changeHistoryQuizSort} />
                             </View>
                         )}
                         <View style={styles.buttonsContainer}>
+                            {historyQuizSort.length > 0 && (<View style={styles.historySortContainer}>
+                                <Text style={styles.historySortText}>{this.textInfoHistoryQuizSort()}</Text>
+                            </View>
+                            )}
                             <Button disabled={questions.length === 0} rounded block style={styles.button} onPress={this.onStartQuiz}>
                                 <Text>
                                     Start Quiz
-                            </Text>
+                                </Text>
                             </Button>
                             <Button rounded success block style={styles.button} onPress={this.onAddNewCard}>
                                 <Text>
                                     Add Card
-                            </Text>
+                                </Text>
                             </Button>
                         </View>
                     </View>
@@ -122,10 +153,21 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         flex: 1,
         justifyContent: 'flex-end',
+        alignItems: 'center',
         marginBottom: 36,
     },
 
     button: {
         marginTop: 15
+    },
+
+    historySortContainer: {
+        textAlign: 'center'
+
+    },
+
+    historySortText: {
+        fontSize: 11,
+        fontStyle: 'italic'
     }
 })

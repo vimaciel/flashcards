@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { View, StyleSheet, Animated, TouchableNativeFeedback } from 'react-native'
+import { View, StyleSheet, Animated, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Button, Text, Footer, FooterTab } from 'native-base'
 import Card from './Card'
@@ -100,16 +100,38 @@ class Quiz extends Component {
         })
     }
 
+    restartQuiz = () => {
+        this.setState({
+            quizIndex: 0,
+            correctQuestions: 0,
+            quizFinished: false
+        })
+    }
+
+    backToDeck = () => {
+        this.props.navigation.navigate('DeckDetail')
+    }
+
     render() {
         const { quizFinished } = this.state
         if (quizFinished) {
             return (
-                <Fragment>
+                <Container>
                     <View style={styles.finishQuizContainer}>
                         <Text style={styles.finalPercentageText}>{this.buildPercentageText()}</Text>
-                        <Text style={styles.resultFinalText}>You've got {this.buildPercentageText()} of questions right</Text>
+                        <Text style={styles.resultFinalText}>You've got {this.buildPercentageText()} of questions right</Text>                        
                     </View>
-                </Fragment>
+                    <Footer>
+                        <FooterTab>
+                            <Button style={styles.retartQuizButton} full success onPress={this.restartQuiz}>
+                                <Text style={styles.textDefault}>Restart Quiz</Text>
+                            </Button>
+                            <Button style={styles.backToDeckButton} full danger onPress={this.backToDeck}>
+                                <Text style={styles.textDefault}>Back to Deck</Text>
+                            </Button>
+                        </FooterTab>
+                    </Footer>
+                </Container>
             )
         }
 
@@ -130,15 +152,15 @@ class Quiz extends Component {
             <Fragment>
                 <View style={styles.infoContainer}>
                     <View style={styles.progressText}>
-                        <Text style={{ color: '#FFF' }}>{this.buildProgressText()}</Text>
+                        <Text style={styles.textDefault}>{this.buildProgressText()}</Text>
                     </View>
                     <View style={styles.percentageText}>
-                        <Text style={{ color: '#FFF' }}>{this.buildPercentageText()}</Text>
+                        <Text style={styles.textDefault}>{this.buildPercentageText()}</Text>
                     </View>
                 </View>
                 <Container style={styles.container}>
                     <View style={styles.container}>
-                        <TouchableNativeFeedback onPress={this.flipCard}>
+                        <TouchableOpacity onPress={this.flipCard}>
                             <View>
                                 <Animated.View style={[styles.flipCard, frontAnimatedStyle, { opacity: this.frontOpacity }]}>
                                     <Card content={question} />
@@ -147,15 +169,15 @@ class Quiz extends Component {
                                     <Card content={answer} />
                                 </Animated.View>
                             </View>
-                        </TouchableNativeFeedback>
+                        </TouchableOpacity>
                     </View>
                     <Footer>
                         <FooterTab>
                             <Button style={styles.correctButton} full success onPress={this.onCorrectButtonClick}>
-                                <Text style={{ color: '#FFF' }}>Correct</Text>
+                                <Text style={styles.textDefault}>Correct</Text>
                             </Button>
                             <Button style={styles.incorrectButton} full danger onPress={this.onIncorrectButtonClick}>
-                                <Text style={{ color: '#FFF' }}>Incorrect</Text>
+                                <Text style={styles.textDefault}>Incorrect</Text>
                             </Button>
                         </FooterTab>
                     </Footer>
@@ -247,5 +269,17 @@ const styles = StyleSheet.create({
 
     incorrectButton: {
         backgroundColor: '#b30000'
+    },
+
+    retartQuizButton: {
+        backgroundColor: '#001a00'
+    },
+
+    backToDeckButton: {
+        backgroundColor: '#660000'
+    },
+
+    textDefault: {
+        color: '#FFF'
     }
 });

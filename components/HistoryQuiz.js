@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react'
-import { StyleSheet, View, Text, ScrollView } from 'react-native'
+import React, { Component } from 'react'
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { Card } from 'native-base'
 import { formatTimeStamp } from '../helpers/common'
 
-class HistoryQuiz extends PureComponent {
+class HistoryQuiz extends Component {
     formatText = (numberOfQuestions, dateQuiz) => {
         const { date, time } = formatTimeStamp(dateQuiz)
         const questions = numberOfQuestions > 1 ? `${numberOfQuestions} questions` : `${numberOfQuestions} question`
@@ -12,30 +12,35 @@ class HistoryQuiz extends PureComponent {
     }
 
     render() {
-        const { data } = this.props
-
+        const { data, changeHistoryQuizSort } = this.props        
+        
         return (
-            <ScrollView style={styles.scroll} horizontal showsHorizontalScrollIndicator={false}>
-                <View style={styles.container}>
-                    {data.map(({ score, numberOfQuestions, date }) => (
-                        <Card key={date} style={styles.box}>
-                            <View style={styles.scoreContainer}>
-                                <Text style={styles.score}>{score}</Text>
-                            </View>
-                            <View style={styles.infoContainer}>
-                                <Text style={styles.info}>{this.formatText(numberOfQuestions, date)}</Text>
+            <View style={styles.fragmentContainer}>
+                <ScrollView style={styles.scroll} horizontal showsHorizontalScrollIndicator={false}>
+                    <View style={styles.container}>
+                        {data.map(({ score, numberOfQuestions, date }) => (
+                            <TouchableOpacity key={date} onPress={changeHistoryQuizSort}>
+                                <Card style={styles.box}>
+                                    <View style={styles.scoreContainer}>
+                                        <Text style={styles.score}>{score}</Text>
+                                    </View>
+                                    <View style={styles.infoContainer}>
+                                        <Text style={styles.info}>{this.formatText(numberOfQuestions, date)}</Text>
+                                    </View>
+                                </Card>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+
+                    <View style={styles.container}>
+                        <Card style={styles.box}>
+                            <View style={styles.noMoreRegistriesContainer}>
+                                <Text style={styles.noMoreRegistriesText}>No more registries</Text>
                             </View>
                         </Card>
-                    ))}
-                </View>
-                <View style={styles.container}>
-                    <Card style={styles.box}>
-                        <View style={styles.noMoreRegistriesContainer}>
-                            <Text style={styles.noMoreRegistriesText}>No more registries</Text>
-                        </View>
-                    </Card>
-                </View>
-            </ScrollView>
+                    </View>
+                </ScrollView>
+            </View>
         );
     }
 }
@@ -43,6 +48,11 @@ class HistoryQuiz extends PureComponent {
 export default HistoryQuiz
 
 const styles = new StyleSheet.create({
+    fragmentContainer: {
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+
     scroll: {
         position: 'absolute',
         top: 15,

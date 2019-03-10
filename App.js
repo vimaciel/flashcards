@@ -15,9 +15,9 @@ class App extends React.Component {
 
   componentDidMount(){
     // Just for development purpose
-    //clearAll()
+    // clearAll()
     setLocalNotification()
-  }
+  }  
 
   async componentWillMount() {
     await Font.loadAsync({

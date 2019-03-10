@@ -16,7 +16,10 @@ export const getDecks = async () => {
 
 export const getDeck = async (id) => {
     const decks = await getDecks()
-    return decks[id]
+    return {
+        ...decks[id],
+        id
+    }
 }
 
 export const saveDeckTitle = async (title) => {
@@ -32,7 +35,13 @@ export const saveDeckTitle = async (title) => {
     }
 
     AsyncStorage.setItem(DECKS, JSON.stringify(newData))
-    return newData
+    return {
+        deck: {
+            ...newData[id],
+            id
+        },
+        decks: newData
+    }
 }
 
 export const addCardToDeck = async (id, question, answer) => {
@@ -51,7 +60,7 @@ export const addQuizHistory = async (id, score, numberOfQuestions) => {
     const decks = await getDecks()
     const deck = decks[id]
     const date = Date.now()
-    
+
     deck.historyQuiz.push({
         score, numberOfQuestions, date
     })

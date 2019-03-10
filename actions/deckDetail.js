@@ -13,6 +13,8 @@ export function getDeckDetail(deck) {
 export function handleGetDeckDetail(id) {
     return (dispatch) => {
         getDeck(id).then(deck => {
+            console.log(deck);
+            
             dispatch(getDeckDetail(deck))
         })
     }

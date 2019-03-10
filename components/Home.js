@@ -26,7 +26,7 @@ class Home extends Component {
                     <FooterTab>
                         <Button full onPress={() => this.props.navigation.navigate('NewDeck')}>
                             <Text>New Deck</Text>
-                        </Button>
+                        </Button>                      
                     </FooterTab>
                 </Footer>
             </Container>
