@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import { View, StyleSheet, Animated, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Button, Text, Footer, FooterTab } from 'native-base'
 import Card from './Card'
 import { handleAddQuizHistory } from '../actions/deckDetail'
 
-class Quiz extends Component {
+class Quiz extends PureComponent {
     static navigationOptions = {
         title: "Quiz",
     }

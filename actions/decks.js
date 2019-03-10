@@ -20,8 +20,6 @@ export function handleGetAllDecks() {
 export function handleSaveDeck(title) {
     return (dispatch) => {
         storage.saveDeckTitle(title).then(({ deck, decks }) => {    
-            console.log(deck);
-                    
             dispatch(getDeckDetail(deck))
             dispatch(getAllDecks(decks))
         })

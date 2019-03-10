@@ -3,45 +3,43 @@ import { getNotificationConfig, setNotificationConfig, removeNotificationConfig 
 
 export function setLocalNotification() {
   getNotificationConfig().then(data => {
-    //if (data === null) {
+    if (data === null) {
       createNewNotification()
-    //}
-  })
+    }
+  });
 }
 
-export function clearLocalNotification () {
+export function clearLocalNotification() {
   return removeNotificationConfig().then(Notifications.cancelAllScheduledNotificationsAsync)
 }
 
-function createNotification () {
-  return {
-    title: 'Hey you from flashcards',
-    body: "😜 don't forget to test yourself on flashcards' app",
-    ios: {
-      sound: true,
-    },
-    android: {
-      sound: true,
-      priority: 'high',
-      sticky: false,
-      vibrate: true,
-    }
+const notificationObject = {
+  title: 'Hey you from flashcards',
+  body: "😜 don't forget to test yourself on flashcards' app",
+  ios: {
+    sound: true,
+  },
+  android: {
+    sound: true,
+    priority: 'high',
+    sticky: false,
+    vibrate: true,
   }
 }
 
 const createNewNotification = async () => {
-  const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)  
-  
+  const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+
   if (status === 'granted') {
     Notifications.cancelAllScheduledNotificationsAsync()
 
     let tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)    
-    tomorrow.setHours(20)    
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setHours(20)
     tomorrow.setMinutes(0)
 
     Notifications.scheduleLocalNotificationAsync(
-      createNotification(),
+      notificationObject,
       {
         time: tomorrow,
         repeat: 'day',

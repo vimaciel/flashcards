@@ -1,23 +1,20 @@
 import React from 'react';
 import { Root } from 'native-base'
 import { Font, AppLoading } from "expo"
-import { createStore } from 'redux'
-import reducer from './reducers'
-import middlewares from './middlewares'
 import { Provider } from 'react-redux'
 import AppNavigator from './components/AppNavigator'
 import { setLocalNotification } from './helpers/notifications'
 import { clearAll } from './helpers/storage'
-
+import { store } from './helpers/store'
 class App extends React.Component {
 
   state = { loading: true }
 
-  componentDidMount(){
+  componentDidMount() {
     // Just for development purpose
-    // clearAll()
+    //clearAll()
     setLocalNotification()
-  }  
+  }
 
   async componentWillMount() {
     await Font.loadAsync({
@@ -35,8 +32,6 @@ class App extends React.Component {
         </Root>
       )
     }
-
-    const store = createStore(reducer, middlewares)
 
     return (
 
