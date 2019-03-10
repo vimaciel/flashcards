@@ -53,7 +53,13 @@ export const addCardToDeck = async (id, question, answer) => {
 
     AsyncStorage.setItem(DECKS, JSON.stringify(decks))
 
-    return decks
+    return {
+        deck: {
+            ...decks[id],
+            id
+        },
+        decks
+    }
 }
 
 export const addQuizHistory = async (id, score, numberOfQuestions) => {
@@ -67,7 +73,13 @@ export const addQuizHistory = async (id, score, numberOfQuestions) => {
 
     AsyncStorage.setItem(DECKS, JSON.stringify(decks))
 
-    return decks
+    return {
+        deck: {
+            ...decks[id],
+            id
+        },
+        decks
+    }
 }
 
 export const getNotificationConfig = async () => {
